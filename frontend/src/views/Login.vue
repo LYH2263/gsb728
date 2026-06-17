@@ -58,7 +58,6 @@
 import { ref, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
-import { useCartStore } from '@/store/cart'
 import type { FormInstance, FormRules } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
@@ -66,7 +65,6 @@ import { ElMessage } from 'element-plus'
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
-const cartStore = useCartStore()
 
 const formRef = ref<FormInstance>()
 const loading = ref(false)
@@ -95,9 +93,6 @@ async function handleSubmit() {
     try {
       await userStore.login(form.username, form.password)
       ElMessage.success('登录成功')
-      
-      // 加载购物车
-      await cartStore.fetchCart()
       
       // 跳转
       const redirect = route.query.redirect as string

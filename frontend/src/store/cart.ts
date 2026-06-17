@@ -74,6 +74,13 @@ export const useCartStore = defineStore('cart', () => {
       // 错误已在拦截器处理
     }
   }
+
+  // 重置购物车（仅清空本地状态，不调用后端）
+  // 用于切换账号 / 登出场景，避免上一个账号的购物车状态残留
+  function resetCart() {
+    items.value = []
+    loading.value = false
+  }
   
   // 检查游戏是否在购物车中
   function isInCart(gameId: number) {
@@ -91,6 +98,7 @@ export const useCartStore = defineStore('cart', () => {
     addToCart,
     removeFromCart,
     clearCart,
+    resetCart,
     isInCart
   }
 })

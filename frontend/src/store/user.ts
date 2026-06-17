@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { User } from '@/types'
 import { authApi, userApi } from '@/api'
+import { useCartStore } from '@/store/cart'
 
 export const useUserStore = defineStore('user', () => {
   // 状态
@@ -18,6 +19,10 @@ export const useUserStore = defineStore('user', () => {
     const data = res.data.data
     token.value = data.token
     userInfo.value = data.userInfo
+    // 切换账号后重置并重新拉取购物车，避免上一个账号的购物车状态残留
+    const cartStore = useCartStore()
+    cartStore.resetCart()
+    await cartStore.fetchCart()
     return data
   }
   
@@ -27,6 +32,10 @@ export const useUserStore = defineStore('user', () => {
     const result = res.data.data
     token.value = result.token
     userInfo.value = result.userInfo
+    // 新账号注册后重置并拉取购物车（新账号应为空），避免残留上一个账号的购物车数据
+    const cartStore = useCartStore()
+    cartStore.resetCart()
+    await cartStore.fetchCart()
     return result
   }
   
@@ -34,6 +43,8 @@ export const useUserStore = defineStore('user', () => {
   function logout() {
     token.value = null
     userInfo.value = null
+    // 登出时清空本地购物车状态，避免下次登录/注册时残留上一个账号的数据
+    useCartStore().resetCart()
   }
   
   // 获取用户信息
