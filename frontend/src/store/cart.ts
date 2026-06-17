@@ -80,6 +80,12 @@ export const useCartStore = defineStore('cart', () => {
     return items.value.some(item => item.gameId === gameId)
   }
   
+  // 重置购物车（仅清空本地状态，不调用后端API）
+  function resetCart() {
+    items.value = []
+    loading.value = false
+  }
+  
   return {
     items,
     loading,
@@ -91,6 +97,7 @@ export const useCartStore = defineStore('cart', () => {
     addToCart,
     removeFromCart,
     clearCart,
-    isInCart
+    isInCart,
+    resetCart
   }
 })

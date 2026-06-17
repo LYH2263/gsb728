@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { User } from '@/types'
 import { authApi, userApi } from '@/api'
+import { useCartStore } from './cart'
 
 export const useUserStore = defineStore('user', () => {
   // 状态
@@ -18,6 +19,8 @@ export const useUserStore = defineStore('user', () => {
     const data = res.data.data
     token.value = data.token
     userInfo.value = data.userInfo
+    const cartStore = useCartStore()
+    await cartStore.fetchCart()
     return data
   }
   
@@ -27,6 +30,8 @@ export const useUserStore = defineStore('user', () => {
     const result = res.data.data
     token.value = result.token
     userInfo.value = result.userInfo
+    const cartStore = useCartStore()
+    await cartStore.fetchCart()
     return result
   }
   
@@ -34,6 +39,8 @@ export const useUserStore = defineStore('user', () => {
   function logout() {
     token.value = null
     userInfo.value = null
+    const cartStore = useCartStore()
+    cartStore.resetCart()
   }
   
   // 获取用户信息
