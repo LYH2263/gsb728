@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { User } from '@/types'
 import { authApi, userApi } from '@/api'
+import { useCartStore } from './cart'
 
 export const useUserStore = defineStore('user', () => {
   // 状态
@@ -18,15 +19,20 @@ export const useUserStore = defineStore('user', () => {
     const data = res.data.data
     token.value = data.token
     userInfo.value = data.userInfo
+    const cartStore = useCartStore()
+    await cartStore.fetchCart()
     return data
   }
   
   // 注册
   async function register(data: { username: string; password: string; email?: string; nickname?: string }) {
+    const cartStore = useCartStore()
+    cartStore.resetCart()
     const res = await authApi.register(data)
     const result = res.data.data
     token.value = result.token
     userInfo.value = result.userInfo
+    await cartStore.fetchCart()
     return result
   }
   
@@ -34,6 +40,8 @@ export const useUserStore = defineStore('user', () => {
   function logout() {
     token.value = null
     userInfo.value = null
+    const cartStore = useCartStore()
+    cartStore.resetCart()
   }
   
   // 获取用户信息
