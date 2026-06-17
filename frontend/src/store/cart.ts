@@ -75,6 +75,12 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
   
+  // 重置本地购物车状态（不调用后端 API，用于切换账号时清空本地缓存）
+  function resetCart() {
+    items.value = []
+    loading.value = false
+  }
+  
   // 检查游戏是否在购物车中
   function isInCart(gameId: number) {
     return items.value.some(item => item.gameId === gameId)
@@ -91,6 +97,7 @@ export const useCartStore = defineStore('cart', () => {
     addToCart,
     removeFromCart,
     clearCart,
+    resetCart,
     isInCart
   }
 })
