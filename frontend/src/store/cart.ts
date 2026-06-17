@@ -64,7 +64,7 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
   
-  // 清空购物车
+  // 清空购物车（调用后端API）
   async function clearCart() {
     try {
       await cartApi.clearCart()
@@ -73,6 +73,12 @@ export const useCartStore = defineStore('cart', () => {
     } catch (error: any) {
       // 错误已在拦截器处理
     }
+  }
+  
+  // 重置本地购物车状态（不调用后端，用于登出/切换账号）
+  function resetCart() {
+    items.value = []
+    loading.value = false
   }
   
   // 检查游戏是否在购物车中
@@ -91,6 +97,7 @@ export const useCartStore = defineStore('cart', () => {
     addToCart,
     removeFromCart,
     clearCart,
+    resetCart,
     isInCart
   }
 })
